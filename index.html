@@ -1,0 +1,97 @@
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATEMATIK REACTOR</title>
+<style>
+body{font-family:Arial,sans-serif;background:#eef4ff;color:#172554;margin:0;text-align:center}
+header{background:#172554;color:white;padding:30px 15px}
+h1{margin:0;font-size:32px}
+main{max-width:800px;margin:25px auto;padding:15px}
+.card{background:white;padding:25px;margin:18px 0;border-radius:18px;box-shadow:0 4px 14px #ccd5e5}
+button{background:#2563eb;color:white;border:0;padding:13px 20px;margin:7px;border-radius:10px;font-size:17px;cursor:pointer}
+input{padding:12px;font-size:20px;width:120px;border:2px solid #93c5fd;border-radius:8px}
+#question{font-size:36px;font-weight:bold;margin:20px}
+footer{padding:20px;background:#172554;color:white}
+</style>
+</head>
+<body>
+<header>
+<h1>⚡ MATEMATIK REACTOR ⚡</h1>
+<p>Ойша есептеу жылдамдығын арттыру</p>
+<p>3-сынып оқушыларына арналған интерактивті ғылыми жоба</p>
+</header>
+<main>
+<div class="card">
+<h2>🔬 Жоба туралы</h2>
+<p>MATEMATIK REACTOR — оқушылардың ойша есептеу жылдамдығын, математикалық ойлауын және зейінін дамытуға арналған жоба.</p>
+<p><b>Мақсаты:</b> математикалық есептерді жылдам әрі дұрыс шығаруға үйрету.</p>
+<p><b>Болжам:</b> күнделікті жаттығу оқушылардың есептеу дағдысын жақсартуға көмектеседі.</p>
+</div>
+<div class="card">
+<h2>🧠 Интерактивті есептер</h2>
+<p>10 сұраққа жауап беріп, өз нәтижеңді тексер!</p>
+<p id="progress">1 / 10 сұрақ</p>
+<div id="question">5 + 3 = ?</div>
+<input id="answer" type="number" placeholder="Жауабың">
+<br>
+<button onclick="checkAnswer()">Жауап беру</button>
+<p id="feedback"></p>
+<p id="score">Дұрыс жауап: 0</p>
+<p id="timer">Уақыт: 0 секунд</p>
+<button onclick="startGame()">Қайта бастау</button>
+</div>
+<div class="card">
+<h2>📊 Зерттеу әдісі</h2>
+<p>Оқушылардың есеп шығару уақытын өлшеу, жауаптарының дұрыстығын салыстыру және жаттығу нәтижесін бақылау.</p>
+</div>
+</main>
+<footer>MATEMATIK REACTOR | Ғылыми жоба</footer>
+<script>
+let questions=[],index=0,score=0,seconds=0,clock=null,started=false;
+function makeQuestions(){
+questions=[];
+for(let i=0;i<10;i++){
+let a=Math.floor(Math.random()*20)+1;
+let b=Math.floor(Math.random()*20)+1;
+let op=Math.random()<0.5?"+":"-";
+if(op==="-"&&b>a){let t=a;a=b;b=t;}
+questions.push({text:a+" "+op+" "+b+" = ?",answer:op==="+"?a+b:a-b});
+}}
+function showQuestion(){
+document.getElementById("question").textContent=questions[index].text;
+document.getElementById("progress").textContent=(index+1)+" / 10 сұрақ";
+document.getElementById("answer").value="";
+document.getElementById("feedback").textContent="";
+}
+function startGame(){
+clearInterval(clock);makeQuestions();index=0;score=0;seconds=0;started=true;
+document.getElementById("score").textContent="Дұрыс жауап: 0";
+document.getElementById("timer").textContent="Уақыт: 0 секунд";
+clock=setInterval(()=>{seconds++;document.getElementById("timer").textContent="Уақыт: "+seconds+" секунд";},1000);
+showQuestion();document.getElementById("answer").focus();
+}
+function checkAnswer(){
+if(!started){startGame();return;}
+let field=document.getElementById("answer");
+if(field.value===""){document.getElementById("feedback").textContent="Жауабыңды енгіз!";return;}
+if(Number(field.value)===questions[index].answer){
+score++;document.getElementById("feedback").textContent="Дұрыс! Жарайсың! 🎉";
+}else{
+document.getElementById("feedback").textContent="Қате. Дұрыс жауап: "+questions[index].answer;
+}
+document.getElementById("score").textContent="Дұрыс жауап: "+score;
+index++;
+if(index<10){setTimeout(showQuestion,600);}
+else{
+clearInterval(clock);started=false;
+document.getElementById("question").textContent="Жаттығу аяқталды! 🏆";
+document.getElementById("progress").textContent="10 / 10 сұрақ орындалды";
+document.getElementById("feedback").textContent="Нәтиже: 10 сұрақтың "+score+"-іне дұрыс жауап бердің. Уақытың: "+seconds+" секунд.";
+}
+}
+document.getElementById("answer").addEventListener("keydown",e=>{if(e.key==="Enter")checkAnswer();});
+startGame();
+</script>
+</body>
+</html>
